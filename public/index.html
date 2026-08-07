@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatChat</title>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="color-scheme" content="dark light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================= AUTH SCREEN ============================= -->
+<main id="auth-screen" class="screen">
+  <div class="panel auth-panel">
+    <div class="wordmark">ChatChat</div>
+    <p class="tagline">A small place to talk.</p>
+
+    <div id="boot-log" class="boot-log" aria-live="polite"></div>
+
+    <div id="auth-forms" class="auth-forms hidden">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="login" role="tab" aria-selected="true">Log in</button>
+        <button class="tab" data-tab="register" role="tab" aria-selected="false">Sign up</button>
+      </div>
+
+      <form id="login-form" class="auth-form" autocomplete="off">
+        <label class="field">
+          <span class="field-label">Username</span>
+          <input type="text" id="login-username" placeholder="username" maxlength="16" required>
+        </label>
+        <label class="field">
+          <span class="field-label">Password</span>
+          <input type="password" id="login-password" placeholder="password" required>
+        </label>
+        <button type="submit" class="btn-primary">Log in</button>
+      </form>
+
+      <form id="register-form" class="auth-form hidden" autocomplete="off">
+        <label class="field">
+          <span class="field-label">Username</span>
+          <input type="text" id="register-username" placeholder="3-16 characters" maxlength="16" required>
+        </label>
+        <label class="field">
+          <span class="field-label">Password</span>
+          <input type="password" id="register-password" placeholder="min. 6 characters" required>
+        </label>
+        <button type="submit" class="btn-primary">Create account</button>
+      </form>
+
+      <p id="auth-error" class="auth-error" role="alert"></p>
+    </div>
+  </div>
+</main>
+
+<!-- ============================= CHAT SCREEN ============================= -->
+<main id="chat-screen" class="screen hidden">
+  <button id="menu-toggle" class="menu-fab" title="Menu (drag to move)" aria-label="Open menu">☰</button>
+
+  <div class="chat-body">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-drag-handle" id="sidebar-drag-handle">
+        <span>Menu</span>
+        <button id="sidebar-close" class="btn-outline small" title="Close" aria-label="Close menu">✕</button>
+      </div>
+      <div class="sidebar-block">
+        <div class="sidebar-title">Channels</div>
+        <div id="total-online" class="total-online">Total online: <strong>0</strong></div>
+        <ul id="public-channel-list" class="channel-list"></ul>
+        <div id="private-channel-wrap" class="hidden">
+          <div class="sidebar-subtitle">Private</div>
+          <ul id="private-channel-list" class="channel-list"></ul>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">Invites <span id="invite-count"></span></div>
+        <ul id="invite-list" class="invite-list"></ul>
+      </div>
+
+      <div class="sidebar-block hidden" id="mod-appeals-block">
+        <div class="sidebar-title">Appeals</div>
+        <ul id="mod-appeals-list" class="invite-list"></ul>
+      </div>
+
+      <div class="sidebar-block hidden" id="reports-block">
+        <div class="sidebar-title">Reports</div>
+        <ul id="reports-list" class="invite-list"></ul>
+      </div>
+
+      <div class="sidebar-block hidden" id="mod-requests-block">
+        <div class="sidebar-title">Mod requests</div>
+        <ul id="mod-requests-list" class="invite-list"></ul>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">Users <span id="user-count">(0)</span></div>
+        <ul id="user-list" class="user-list"></ul>
+      </div>
+
+      <div class="sidebar-block sidebar-help">
+        <div class="sidebar-title">Commands</div>
+        <ul class="cmd-list">
+          <li><code>/nick</code> name</li>
+          <li><code>/me</code> action</li>
+          <li><code>/msg</code> user text</li>
+          <li><code>@name</code> to ping (max 2)</li>
+          <li><code>/create</code> name</li>
+          <li><code>/join</code> name</li>
+          <li><code>/invite</code> user [ch]</li>
+          <li><code>/leave</code></li>
+          <li><code>/pfp</code> image url</li>
+          <li><code>/blockinvites</code> / <code>/unblockinvites</code> user</li>
+          <li><code>/mute</code> / <code>/unmute</code> user</li>
+          <li><code>/mlist</code></li>
+          <li><code>/ff</code> toggle filter</li>
+          <li><code>/silence</code> / <code>/unsilence</code> user</li>
+          <li><code>/appeal</code> text</li>
+          <li><code>/report</code> user(s) reason</li>
+          <li><code>/mods</code></li>
+          <li><code>/whowas</code> name</li>
+          <li><code>/quit</code></li>
+          <li><code>/logout</code></li>
+          <li><code>/delete</code> acc / chnl</li>
+          <li id="modhelp-cmd" class="hidden"><code>/modhelp</code></li>
+        </ul>
+      </div>
+    </aside>
+
+    <section class="chat-main">
+      <div id="log" class="log" aria-live="polite"></div>
+      <div id="report-selection-bar" class="report-selection-bar hidden">
+        <span id="report-selection-count">0</span> message(s) selected for report
+        <button id="report-selection-clear" class="btn-outline small" type="button">Clear</button>
+      </div>
+      <form id="send-form" class="send-form" autocomplete="off">
+        <div id="autocomplete-list" class="autocomplete-list hidden"></div>
+        <span id="prompt-nick" class="prompt-nick">you</span>
+        <input type="text" id="msg-input" placeholder="Type a message or /command..." maxlength="2000">
+      </form>
+    </section>
+  </div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

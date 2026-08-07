@@ -1,0 +1,7 @@
+node_modules
+npm-debug.log
+users.json
+channels.json
+silences.json
+.git
+.gitignore

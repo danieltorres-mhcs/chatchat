@@ -1,0 +1,5 @@
+node_modules/
+users.json
+channels.json
+silences.json
+.DS_Store

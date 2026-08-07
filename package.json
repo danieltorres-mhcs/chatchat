@@ -1,0 +1,17 @@
+{
+  "name": "chatchat",
+  "version": "1.0.0",
+  "description": "ChatChat — a small web chat with accounts, public/private channels, invites, and slash commands.",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2",
+    "ws": "^8.17.0"
+  }
+}
